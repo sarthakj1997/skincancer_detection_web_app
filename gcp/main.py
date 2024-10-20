@@ -3,8 +3,16 @@ import tensorflow as tf
 from PIL import Image
 import numpy as np
 
-BUCKET_NAME='german-waste-segregator'
-class_names = ['Black_or_Red', 'Blue', 'Donation_box', 'Glass', 'Green_or_Brown', 'Yellow']
+BUCKET_NAME='skincancer_detector_app'
+class_names = {
+    0: 'Actinic Keratosis',    # akiec
+    1: 'Basal Cell Carcinoma', # bcc
+    2: 'Benign Keratosis',     # bkl
+    3: 'Dermatofibroma',       # df
+    4: 'Melanoma',            # mel
+    5: 'Melanocytic Nevi',    # nv
+    6: 'Vascular Lesion'      # vasc
+}
 
 
 
@@ -25,15 +33,15 @@ def predict(request):
     if model is None:
         download_blob(
             BUCKET_NAME,
-            "models/garbage_InceptionV3.h5",
-            "/tmp/garbage_InceptionV3.h5",
+            "models/1.h5",
+            "/tmp/13.h5",
         )
-        model = tf.keras.models.load_model("/tmp/garbage_InceptionV3.h5",compile=False)
+        model = tf.keras.models.load_model("/tmp/1.h5",compile=False)
 
     image = request.files["file"]
 
     image = np.array(
-        Image.open(image).convert("RGB").resize((256, 256)) # image resizing
+        Image.open(image).convert("RGB").resize((128, 128)) # image resizing
     )
 
     # image = image/255 # normalize the image in 0 to 1 range
